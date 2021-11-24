@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StarWish">
         <activity
+            android:name=".MainScreen"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
