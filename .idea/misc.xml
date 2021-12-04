@@ -6,8 +6,9 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.14270833333333333" />
         <entry key="app/src/main/res/layout/activity_first.xml" value="0.18958333333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
-        <entry key="app/src/main/res/layout/activity_main_screen.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main_screen.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.18958333333333333" />
+        <entry key="app/src/main/res/layout/gift_grid_item.xml" value="0.1265625" />
       </map>
     </option>
   </component>
