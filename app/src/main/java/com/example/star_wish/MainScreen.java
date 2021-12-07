@@ -1,8 +1,12 @@
 package com.example.star_wish;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -57,6 +61,8 @@ public class MainScreen extends AppCompatActivity {
     int PartnerImage_selected = R.drawable.electronics_selected;
     int kidsImage_selected = R.drawable.home_selected;
 
+    int CategoryIdx;
+
     ActivityMainScreenBinding binding;
     GridView simpleGrid;
 
@@ -83,16 +89,61 @@ public class MainScreen extends AppCompatActivity {
         // Create an object of CustomAdapter and set Adapter to GirdView
         CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), gifts);
         simpleGrid.setAdapter(customAdapter);
+        CategoryIdx = 1;
         loadGiftsForCategory("Best Selling");
         // implement setOnItemClickListener event on GridView
         simpleGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(MainScreen.this,"You clicked on " + gifts.get(i).title,Toast.LENGTH_SHORT).show();
-
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(gifts.get(i).url));
+                startActivity(browserIntent);
             }
         });
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences sharedPref = this.getSharedPreferences("application", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("Last Category", CategoryIdx);
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = this.getSharedPreferences("application", Context.MODE_PRIVATE);
+        CategoryIdx = sharedPref.getInt("Last Category", 1);
+        switch (CategoryIdx) {
+            case 1:
+                selectedCategory = "Best Selling";
+                deselectOldCategory(oldCategory,selectedCategory);
+                bestSellingImageView.setImageResource(bestSellingImage_selected);
+                break;
+            case 2:
+                selectedCategory = "Best Friend";
+                deselectOldCategory(oldCategory,selectedCategory);
+                BestFriendImageView.setImageResource(BestFriendImage_selected);
+                break;
+            case 3:
+                selectedCategory = "For Family";
+                deselectOldCategory(oldCategory,selectedCategory);
+                FamilyImageView.setImageResource(FamilyImage_selected);
+                break;
+            case 4:
+                selectedCategory = "For Partner";
+                deselectOldCategory(oldCategory,selectedCategory);
+                PartnerImageView.setImageResource(PartnerImage_selected);
+                break;
+            case 5:
+                selectedCategory = "For Kids";
+                deselectOldCategory(oldCategory,selectedCategory);
+                kidsImageView.setImageResource(kidsImage_selected);
+                break;
+        }
+        loadGiftsForCategory(selectedCategory);
     }
 
     public void loadGiftsForCategory (String category) {
@@ -109,7 +160,7 @@ public class MainScreen extends AppCompatActivity {
 
         gifts.clear();
         for (int i = 0; i < ImageUrls.size(); i++){
-            Gift gift = new Gift(Titles.get(i),Prices.get(i), Urls.get(i), ImageUrls.get(i), PartnerImage);
+            Gift gift = new Gift(Titles.get(i),Prices.get(i), Urls.get(i), ImageUrls.get(i), Descriptions.get(i));
             gifts.add(gift);
         }
 
@@ -118,63 +169,23 @@ public class MainScreen extends AppCompatActivity {
         simpleGrid.setAdapter(customAdapter);
     }
 
-    public ArrayList<Gift> fetchData() {
-        return new ArrayList<>();
-    }
-
-    public void addTempGifts() {
-        Gift gift1 = new Gift("Apple Airpods","$129.99",
-                "https://www.amazon.com/Apple-MME73AM-A-AirPods-3rd-Generation/dp/B09JQL3NWT/ref=asc_df_B09JQL3NWT/?tag=hyprod-20&linkCode=df0&hvadid=533377612228&hvpos=&hvnetw=g&hvrand=1855418286339174346&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9031645&hvtargid=pla-1479450628074&psc=1",
-                "https://m.media-amazon.com/images/I/61ZRU9gnbxL._AC_SL1500_.jpg",
-                PartnerImage);
-        Gift gift2 = new Gift("AA Batteries","$29.99",
-                "https://www.amazon.com/AmazonBasics-AA-Performance-Alkaline-Batteries/dp/B07NVTGRVZ/ref=zg-bs_hpc_1/135-2231544-6479548?pd_rd_w=zoOcQ&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B00QWO9P0O&th=1",
-                "https://images-na.ssl-images-amazon.com/images/I/51netU-Kn6L.__AC_SX300_SY300_QL70_FMwebp_.jpg",
-                bestSellingImage);
-        Gift gift3 = new Gift("Fire TV Stick","$19.99",
-                "https://www.amazon.com/fire-tv-stick-with-3rd-gen-alexa-voice-remote/dp/B08C1W5N87/ref=zg-bs_electronics_1/135-2231544-6479548?pd_rd_w=iL6oB&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B08C1W5N87&psc=1",
-                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", kidsImage );
-
-        Gift gift4 = new Gift("Fire TV Stick","$19.99",
-                "https://www.amazon.com/fire-tv-stick-with-3rd-gen-alexa-voice-remote/dp/B08C1W5N87/ref=zg-bs_electronics_1/135-2231544-6479548?pd_rd_w=iL6oB&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B08C1W5N87&psc=1",
-                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", kidsImage );
-
-        Gift gift5 = new Gift("Fire TV Stick","$19.99",
-                "https://www.amazon.com/fire-tv-stick-with-3rd-gen-alexa-voice-remote/dp/B08C1W5N87/ref=zg-bs_electronics_1/135-2231544-6479548?pd_rd_w=iL6oB&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B08C1W5N87&psc=1",
-                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", kidsImage);
-        Gift gift6 = new Gift("Apple Airpods","$129.99",
-                "https://www.amazon.com/Apple-MME73AM-A-AirPods-3rd-Generation/dp/B09JQL3NWT/ref=asc_df_B09JQL3NWT/?tag=hyprod-20&linkCode=df0&hvadid=533377612228&hvpos=&hvnetw=g&hvrand=1855418286339174346&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9031645&hvtargid=pla-1479450628074&psc=1",
-                "https://m.media-amazon.com/images/I/61ZRU9gnbxL._AC_SL1500_.jpg",
-                PartnerImage);
-        Gift gift7 = new Gift("AA Batteries","$29.99",
-                "https://www.amazon.com/AmazonBasics-AA-Performance-Alkaline-Batteries/dp/B07NVTGRVZ/ref=zg-bs_hpc_1/135-2231544-6479548?pd_rd_w=zoOcQ&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B00QWO9P0O&th=1",
-                "https://images-na.ssl-images-amazon.com/images/I/51netU-Kn6L.__AC_SX300_SY300_QL70_FMwebp_.jpg",
-                bestSellingImage);
-
-        gifts.add(gift1);
-        gifts.add(gift2);
-        gifts.add(gift3);
-        gifts.add(gift4);
-        gifts.add(gift5);
-        gifts.add(gift6);
-        gifts.add(gift7);
-    }
-
     public void deselectOldCategory(String oldCat, String newCat) {
-
         switch (oldCat) {
             case "Best Selling":
                 bestSellingImageView.setImageResource(bestSellingImage);
+                break;
             case "Best Friend":
                 BestFriendImageView.setImageResource(BestFriendImage);
+                break;
             case "For Family":
                 FamilyImageView.setImageResource(FamilyImage);
+                break;
             case "For Partner":
                 PartnerImageView.setImageResource(PartnerImage);
+                break;
             case "For Kids":
                 kidsImageView.setImageResource(kidsImage);
-            default:
-                Log.v("Star Wish","In the default case for some reason...");
+                break;
         }
         oldCategory = newCat;
     }
@@ -207,6 +218,7 @@ public class MainScreen extends AppCompatActivity {
                 bestSellingImageView.setImageResource(bestSellingImage_selected);
 
                 // GET GIFTS
+                CategoryIdx = 1;
                 loadGiftsForCategory("Best Selling");
             }
         });
@@ -228,6 +240,7 @@ public class MainScreen extends AppCompatActivity {
                 deselectOldCategory(oldCategory,selectedCategory);
                 BestFriendImageView.setImageResource(BestFriendImage_selected);
 
+                CategoryIdx = 2;
                 loadGiftsForCategory("Best Friend");
             }
         });
@@ -248,6 +261,7 @@ public class MainScreen extends AppCompatActivity {
                 deselectOldCategory(oldCategory,selectedCategory);
                 FamilyImageView.setImageResource(FamilyImage_selected);
 
+                CategoryIdx = 3;
                 loadGiftsForCategory("For Family");
             }
         });
@@ -266,6 +280,7 @@ public class MainScreen extends AppCompatActivity {
                 deselectOldCategory(oldCategory,selectedCategory);
                 PartnerImageView.setImageResource(PartnerImage_selected);
 
+                CategoryIdx = 4;
                 loadGiftsForCategory("For Partner");
             }
         });
@@ -284,6 +299,7 @@ public class MainScreen extends AppCompatActivity {
                 deselectOldCategory(oldCategory,selectedCategory);
                 kidsImageView.setImageResource(kidsImage_selected);
 
+                CategoryIdx = 5;
                 loadGiftsForCategory("For Kids");
 
             }

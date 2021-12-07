@@ -29,5 +29,13 @@
         android:textSize="20sp"
         android:textColor="@color/black"/>
 
+    <TextView
+        android:id="@+id/Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Its Cool"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
 
 </LinearLayout>
