@@ -44,8 +44,9 @@ public class CustomAdapter extends BaseAdapter {
 
 
         textView.setText(gifts.get(i).title);
-        //new CustomAdapter.DownloadedImageFromUrl((ImageView) giftImage).execute(gifts.get(i).imageUrl);
-
+        new CustomAdapter.DownloadedImageFromUrl((ImageView) giftImage).execute(gifts.get(i).imageUrl);
+        TextView PriceView = view.findViewById(R.id.Price);
+        PriceView.setText(gifts.get(i).cost);
         return view;
     }
 

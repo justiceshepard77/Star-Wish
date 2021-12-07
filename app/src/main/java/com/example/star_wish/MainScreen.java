@@ -78,12 +78,12 @@ public class MainScreen extends AppCompatActivity {
         kidsImageView = findViewById(R.id.kidsImageView);
 
         addButtons();
-        loadGiftsForCategory("Best Selling");
 
         simpleGrid = (GridView) findViewById(R.id.giftGridView); // init GridView
         // Create an object of CustomAdapter and set Adapter to GirdView
         CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), gifts);
         simpleGrid.setAdapter(customAdapter);
+        loadGiftsForCategory("Best Selling");
         // implement setOnItemClickListener event on GridView
         simpleGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -107,12 +107,15 @@ public class MainScreen extends AppCompatActivity {
         ArrayList<String> Prices = Results.get(3);
         ArrayList<String> Descriptions = Results.get(4);
 
-        System.out.println(ImageUrls);
-        System.out.println(Urls);
-        System.out.println(Titles);
-        System.out.println(Prices);
-        System.out.println(Descriptions);
+        gifts.clear();
+        for (int i = 0; i < ImageUrls.size(); i++){
+            Gift gift = new Gift(Titles.get(i),Prices.get(i), Urls.get(i), ImageUrls.get(i), PartnerImage);
+            gifts.add(gift);
+        }
 
+        simpleGrid.invalidateViews();
+        CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), gifts);
+        simpleGrid.setAdapter(customAdapter);
     }
 
     public ArrayList<Gift> fetchData() {
