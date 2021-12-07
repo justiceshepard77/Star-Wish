@@ -77,7 +77,7 @@ public class MainScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
         bestSellingImageView = findViewById(R.id.bestSellingImageView);
-         momImageView = findViewById(R.id.momImageView);
+        momImageView = findViewById(R.id.momImageView);
          dadImageView = findViewById(R.id.dadImageView);
          electronicsImageView = findViewById(R.id.electronicsImageView);
          homeImageView = findViewById(R.id.homeImageView);
@@ -118,6 +118,7 @@ public class MainScreen extends AppCompatActivity {
         ArrayList<String> ImgList = new ArrayList<String>();
         ArrayList<String> TextList = new ArrayList<String>();
 
+        gifts.clear();
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -125,10 +126,15 @@ public class MainScreen extends AppCompatActivity {
                     org.jsoup.nodes.Document doc = (org.jsoup.nodes.Document) Jsoup.connect("https://buybuggle.com/pages/21-gadgets/")
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                             .referrer("http://www.google.com")
-                            .timeout(1000*5)
+                            .timeout(1000*35)
                             .get();
+                    //System.out.println((Elements) doc.getAllElements());
+                    Elements allGiftTitles= (Elements) doc.getElementsByTag("h2");
+                    System.out.println((Elements) doc.getElementsByTag("h2"));
+
+
                     Elements allinfo = (Elements) doc.getElementsByTag("img");
-                    //System.out.println(allinfo);
+
                     for (Element element : allinfo){
                         try {
                             String imgs = element.attr("src");
@@ -136,6 +142,11 @@ public class MainScreen extends AppCompatActivity {
                             for (int j = 0; j < imgs2.length; j++){
                                 String string = "https://buybuggle.com/pages/21-gadgets/";
                                 string = string + imgs2[j];
+                                Gift gift1 = new Gift("Gift HERE","$129.99",
+                                        "https://www.amazon.com/Apple-MME73AM-A-AirPods-3rd-Generation/dp/B09JQL3NWT/ref=asc_df_B09JQL3NWT/?tag=hyprod-20&linkCode=df0&hvadid=533377612228&hvpos=&hvnetw=g&hvrand=1855418286339174346&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9031645&hvtargid=pla-1479450628074&psc=1",
+                                        string,
+                                        electronicsImage);
+                                gifts.add(gift1);
                                 ImgList.add(string);
                             }
                         } catch(Exception e){ }
@@ -144,6 +155,10 @@ public class MainScreen extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), gifts);
+
+                            simpleGrid.invalidateViews();
+                            simpleGrid.setAdapter(customAdapter);
                             new MainScreen.getImageFromURL((ImageView) bestSellingImageView).execute(ImgList.get(1));
                             //Glide.with(bestSellingImageView).load(ImgList.get(1)).into(bestSellingImageView);
                         }
@@ -167,7 +182,7 @@ public class MainScreen extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url("https://api.webscrapingapi.com/v1?api_key=eckAypfkdvQTF4tY8NZeHAyqoyZfuZIM&url=https://www.target.com/p/xbox-series-x-console/-/A-80790841")
+                    .url("https://api.webscrapingapi.com/v1?api_key=eckAypfkdvQTF4tY8NZeHAyqoyZfuZIM&url=https://buybuggle.com/pages/21-gadgets/")
                     .get()
                     .build();
             client.newCall(request).enqueue(new Callback() {

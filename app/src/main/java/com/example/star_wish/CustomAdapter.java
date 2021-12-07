@@ -44,7 +44,7 @@ public class CustomAdapter extends BaseAdapter {
 
 
         textView.setText(gifts.get(i).title);
-        //new CustomAdapter.DownloadedImageFromUrl((ImageView) giftImage).execute(gifts.get(i).imageUrl);
+        new CustomAdapter.DownloadedImageFromUrl((ImageView) giftImage).execute(gifts.get(i).imageUrl);
 
         return view;
     }

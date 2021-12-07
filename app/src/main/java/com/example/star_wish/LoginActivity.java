@@ -26,6 +26,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+    public void adminButtonPressed(View view) {
+        Intent intent = new Intent(LoginActivity.this , MainScreen.class);
+        startActivity(intent);
+        finish();
+    }
 
     public void login_user(View view) {
         EditText txtEmail = findViewById(R.id.email);
