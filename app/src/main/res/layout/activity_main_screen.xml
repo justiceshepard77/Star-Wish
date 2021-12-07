@@ -169,8 +169,8 @@
     <GridView
         android:id="@+id/giftGridView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="175dp"
         android:numColumns="1"
         app:layout_constraintTop_toBottomOf="@id/giftCategoriesScrollView" />
 
