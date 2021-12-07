@@ -1,13 +1,11 @@
 package com.example.star_wish;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,12 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-//import com.gargoylesoftware.htmlunit.*;
-//import com.gargoylesoftware.htmlunit.html.*;
-//import java.io.IOException;
-//import java.util.List;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.star_wish.databinding.ActivityMainScreenBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -34,16 +29,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 public class MainScreen extends AppCompatActivity {
 
-    String[] categories = {"Best Selling", "For Mom", "For Dad", "Electronics", "Home"};
+    String[] categories = {"Best Selling", "Best Friend", "For Family", "For Partner", "For Kids"};
     //private Gift[] gifts;
     ArrayList<Gift> gifts = new ArrayList<Gift>();
 
@@ -52,22 +40,22 @@ public class MainScreen extends AppCompatActivity {
 
 
     private ImageView bestSellingImageView;
-    private ImageView momImageView;
-    private ImageView dadImageView;
-    private ImageView electronicsImageView;
-    private ImageView homeImageView;
+    private ImageView BestFriendImageView;
+    private ImageView FamilyImageView;
+    private ImageView PartnerImageView;
+    private ImageView kidsImageView;
 
     int bestSellingImage = R.drawable.bestselling;
-    int forMomImage = R.drawable.mom;
-    int forDadImage = R.drawable.dad;
-    int electronicsImage = R.drawable.electronics;
-    int homeImage = R.drawable.home;
+    int BestFriendImage = R.drawable.mom;
+    int FamilyImage = R.drawable.dad;
+    int PartnerImage = R.drawable.electronics;
+    int kidsImage = R.drawable.home;
 
     int bestSellingImage_selected = R.drawable.bestselling_selected;
-    int forMomImage_selected = R.drawable.mom_selected;
-    int forDadImage_selected = R.drawable.dad_selected;
-    int electronicsImage_selected = R.drawable.electronics_selected;
-    int homeImage_selected = R.drawable.home_selected;
+    int BestFriendImage_selected = R.drawable.mom_selected;
+    int FamilyImage_selected = R.drawable.dad_selected;
+    int PartnerImage_selected = R.drawable.electronics_selected;
+    int kidsImage_selected = R.drawable.home_selected;
 
     ActivityMainScreenBinding binding;
     GridView simpleGrid;
@@ -76,28 +64,21 @@ public class MainScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         bestSellingImageView = findViewById(R.id.bestSellingImageView);
-         momImageView = findViewById(R.id.momImageView);
-         dadImageView = findViewById(R.id.dadImageView);
-         electronicsImageView = findViewById(R.id.electronicsImageView);
-         homeImageView = findViewById(R.id.homeImageView);
+        BestFriendImageView = findViewById(R.id.BestFriendImageView);
+        FamilyImageView = findViewById(R.id.FamilyImageView);
+        PartnerImageView = findViewById(R.id.PartnerImageView);
+        kidsImageView = findViewById(R.id.kidsImageView);
 
         addButtons();
-        addTempGifts();
-
-
-//        binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot()); // this line makes the giftCategoryScrollView break
-//        int[] tempImages = {R.drawable.dad,R.drawable.mom,R.drawable.her};
-//        GridAdapter gridAdapter = new GridAdapter(MainScreen.this,gifts,tempImages);
-//        binding.giftGridView.setAdapter(gridAdapter);
-//
-//        binding.giftGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(MainScreen.this,"You clicked on " + gifts.get(i).title,Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        loadGiftsForCategory("Best Selling");
 
         simpleGrid = (GridView) findViewById(R.id.giftGridView); // init GridView
         // Create an object of CustomAdapter and set Adapter to GirdView
@@ -114,161 +95,58 @@ public class MainScreen extends AppCompatActivity {
 
     }
 
-    public void austinWebScrape() {
-        ArrayList<String> ImgList = new ArrayList<String>();
-        ArrayList<String> TextList = new ArrayList<String>();
-
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    org.jsoup.nodes.Document doc = (org.jsoup.nodes.Document) Jsoup.connect("https://buybuggle.com/pages/21-gadgets/")
-                            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                            .referrer("http://www.google.com")
-                            .timeout(1000*5)
-                            .get();
-                    Elements allinfo = (Elements) doc.getElementsByTag("img");
-                    //System.out.println(allinfo);
-                    for (Element element : allinfo){
-                        try {
-                            String imgs = element.attr("src");
-                            String[] imgs2 = imgs.split("\n");
-                            for (int j = 0; j < imgs2.length; j++){
-                                String string = "https://buybuggle.com/pages/21-gadgets/";
-                                string = string + imgs2[j];
-                                ImgList.add(string);
-                            }
-                        } catch(Exception e){ }
-                    }
-                    System.out.println(ImgList);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new MainScreen.getImageFromURL((ImageView) bestSellingImageView).execute(ImgList.get(1));
-                            //Glide.with(bestSellingImageView).load(ImgList.get(1)).into(bestSellingImageView);
-                        }
-                    });
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                } catch (HttpStatusException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
     public void loadGiftsForCategory (String category) {
-        switch (category){
-            case "Best Selling":
-            //
-                Log.v("wishful","Loading gifts for category: " + category);
-
-                OkHttpClient client = new OkHttpClient();
-
-            Request request = new Request.Builder()
-                    .url("https://api.webscrapingapi.com/v1?api_key=eckAypfkdvQTF4tY8NZeHAyqoyZfuZIM&url=https://www.target.com/p/xbox-series-x-console/-/A-80790841")
-                    .get()
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-
-                    if (response.isSuccessful()) {
-                        String myResponse = response.body().string();
-                        Log.v("Wishful","My Response = " + myResponse);
-                        MainScreen.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // update the UI here
-
-                            }
-                        });
-                    } else {
-                    }
-                    Log.v("Wishful","Response === " + response.body().string());
-
-                }
-            });
-            //Response response = client.newCall(request).execute();
-
-            //Log.v("Star Wish",response.toString());
-
-            case "For Mom":
-
-//                WebClient webClient = new WebClient(BrowserVersion.CHROME);
-//
-//                try {
-//                    HtmlPage page = webClient.getPage("https://www.amazon.com/s?k=best+selling&ref=nb_sb_noss_1");
-//
-//                    webClient.getCurrentWindow().getJobManager().removeAllJobs();
-//                    webClient.close();
-//
-////                    webClient.getOptions().setCssEnabled(false);
-////                    webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-////                    webClient.getOptions().setThrowExceptionOnScriptError(false);
-////                    webClient.getOptions().setPrintContentOnFailingStatusCode(false);
-//                    String title = page.getTitleText();
-//                    Log.v("OutputHTML","Title Text: " + title);
-//
-//                    List<HtmlAnchor> links = page.getAnchors();
-//                    for (HtmlAnchor link : links) {
-//                        String href = link.getHrefAttribute();
-//                        Log.v("OutputHTML","Link: " + href);
-//                    }
-//
-//                } catch (IOException e) {
-//                    System.out.println("An error occurred: " + e);
-//                }
-            case "For Dad":
-                    austinWebScrape();
-            case "Electronics":
-
-            case "Home":
-
-            default:
-                // idk why it would be here
-
-        }
+        UpdateUI(category);
     }
+
+    public void UpdateUI(String category){
+        ArrayList<ArrayList<String>> Results = TopicWebScrape(category);
+        ArrayList<String> ImageUrls = Results.get(0);
+        ArrayList<String> Urls = Results.get(1);
+        ArrayList<String> Titles = Results.get(2);
+        ArrayList<String> Prices = Results.get(3);
+        ArrayList<String> Descriptions = Results.get(4);
+
+        System.out.println(ImageUrls);
+        System.out.println(Urls);
+        System.out.println(Titles);
+        System.out.println(Prices);
+        System.out.println(Descriptions);
+
+    }
+
     public ArrayList<Gift> fetchData() {
         return new ArrayList<>();
-
     }
+
     public void addTempGifts() {
         Gift gift1 = new Gift("Apple Airpods","$129.99",
                 "https://www.amazon.com/Apple-MME73AM-A-AirPods-3rd-Generation/dp/B09JQL3NWT/ref=asc_df_B09JQL3NWT/?tag=hyprod-20&linkCode=df0&hvadid=533377612228&hvpos=&hvnetw=g&hvrand=1855418286339174346&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9031645&hvtargid=pla-1479450628074&psc=1",
                 "https://m.media-amazon.com/images/I/61ZRU9gnbxL._AC_SL1500_.jpg",
-                electronicsImage);
+                PartnerImage);
         Gift gift2 = new Gift("AA Batteries","$29.99",
                 "https://www.amazon.com/AmazonBasics-AA-Performance-Alkaline-Batteries/dp/B07NVTGRVZ/ref=zg-bs_hpc_1/135-2231544-6479548?pd_rd_w=zoOcQ&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B00QWO9P0O&th=1",
                 "https://images-na.ssl-images-amazon.com/images/I/51netU-Kn6L.__AC_SX300_SY300_QL70_FMwebp_.jpg",
                 bestSellingImage);
         Gift gift3 = new Gift("Fire TV Stick","$19.99",
                 "https://www.amazon.com/fire-tv-stick-with-3rd-gen-alexa-voice-remote/dp/B08C1W5N87/ref=zg-bs_electronics_1/135-2231544-6479548?pd_rd_w=iL6oB&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B08C1W5N87&psc=1",
-                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", homeImage );
+                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", kidsImage );
 
         Gift gift4 = new Gift("Fire TV Stick","$19.99",
                 "https://www.amazon.com/fire-tv-stick-with-3rd-gen-alexa-voice-remote/dp/B08C1W5N87/ref=zg-bs_electronics_1/135-2231544-6479548?pd_rd_w=iL6oB&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B08C1W5N87&psc=1",
-                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", homeImage );
+                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", kidsImage );
 
         Gift gift5 = new Gift("Fire TV Stick","$19.99",
                 "https://www.amazon.com/fire-tv-stick-with-3rd-gen-alexa-voice-remote/dp/B08C1W5N87/ref=zg-bs_electronics_1/135-2231544-6479548?pd_rd_w=iL6oB&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B08C1W5N87&psc=1",
-                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", homeImage );
+                "https://m.media-amazon.com/images/I/61+T2xNzR7S._AC_SL1000_.jpg", kidsImage);
         Gift gift6 = new Gift("Apple Airpods","$129.99",
                 "https://www.amazon.com/Apple-MME73AM-A-AirPods-3rd-Generation/dp/B09JQL3NWT/ref=asc_df_B09JQL3NWT/?tag=hyprod-20&linkCode=df0&hvadid=533377612228&hvpos=&hvnetw=g&hvrand=1855418286339174346&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9031645&hvtargid=pla-1479450628074&psc=1",
                 "https://m.media-amazon.com/images/I/61ZRU9gnbxL._AC_SL1500_.jpg",
-                electronicsImage);
+                PartnerImage);
         Gift gift7 = new Gift("AA Batteries","$29.99",
                 "https://www.amazon.com/AmazonBasics-AA-Performance-Alkaline-Batteries/dp/B07NVTGRVZ/ref=zg-bs_hpc_1/135-2231544-6479548?pd_rd_w=zoOcQ&pf_rd_p=1e7b1982-fb44-47aa-b1ce-d356a8609d66&pf_rd_r=266D6GYACXA1W95B6XRD&pd_rd_r=2cecdc83-62d9-4e5e-9039-336b0405f419&pd_rd_wg=QNsfN&pd_rd_i=B00QWO9P0O&th=1",
                 "https://images-na.ssl-images-amazon.com/images/I/51netU-Kn6L.__AC_SX300_SY300_QL70_FMwebp_.jpg",
                 bestSellingImage);
-
 
         gifts.add(gift1);
         gifts.add(gift2);
@@ -277,9 +155,6 @@ public class MainScreen extends AppCompatActivity {
         gifts.add(gift5);
         gifts.add(gift6);
         gifts.add(gift7);
-
-
-
     }
 
     public void deselectOldCategory(String oldCat, String newCat) {
@@ -287,14 +162,14 @@ public class MainScreen extends AppCompatActivity {
         switch (oldCat) {
             case "Best Selling":
                 bestSellingImageView.setImageResource(bestSellingImage);
-            case "For Mom":
-                momImageView.setImageResource(forMomImage);
-            case "For Dad":
-                dadImageView.setImageResource(forDadImage);
-            case "Electronics":
-                electronicsImageView.setImageResource(electronicsImage);
-            case "Home":
-                homeImageView.setImageResource(homeImage);
+            case "Best Friend":
+                BestFriendImageView.setImageResource(BestFriendImage);
+            case "For Family":
+                FamilyImageView.setImageResource(FamilyImage);
+            case "For Partner":
+                PartnerImageView.setImageResource(PartnerImage);
+            case "For Kids":
+                kidsImageView.setImageResource(kidsImage);
             default:
                 Log.v("Star Wish","In the default case for some reason...");
         }
@@ -303,10 +178,10 @@ public class MainScreen extends AppCompatActivity {
 
     public void addButtons() {
         LinearLayout bestSellingButton = (LinearLayout )findViewById(R.id.bestSellingButton);
-        LinearLayout forMomButton = (LinearLayout )findViewById(R.id.forMomButton);
-        LinearLayout forDadButton = (LinearLayout )findViewById(R.id.forDadButton);
-        LinearLayout electronicsButton = (LinearLayout )findViewById(R.id.electronicsButton);
-        LinearLayout homeButton = (LinearLayout )findViewById(R.id.homeButton);
+        LinearLayout BestFriendButton = (LinearLayout )findViewById(R.id.forBestFriendButton);
+        LinearLayout FamilyButton = (LinearLayout )findViewById(R.id.forFamilyButton);
+        LinearLayout PartnerButton = (LinearLayout )findViewById(R.id.PartnerButton);
+        LinearLayout kidsButton = (LinearLayout )findViewById(R.id.kidsButton);
 
         bestSellingImageView.setImageResource(bestSellingImage_selected);
 
@@ -333,11 +208,11 @@ public class MainScreen extends AppCompatActivity {
             }
         });
 
-        forMomButton.setOnClickListener(new View.OnClickListener() {
+        BestFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("Star Wish", "Pressed forMomButton!");
-                selectedCategory = "For Mom";
+                Log.v("Star Wish", "Pressed Best Friend Button!");
+                selectedCategory = "Best Friend";
                 Log.v("Star Wish", oldCategory);
                 Log.v("Star Wish", selectedCategory);
 
@@ -348,17 +223,16 @@ public class MainScreen extends AppCompatActivity {
                     return;
                 }
                 deselectOldCategory(oldCategory,selectedCategory);
-                momImageView.setImageResource(forMomImage_selected);
-                loadGiftsForCategory("For Mom");
+                BestFriendImageView.setImageResource(BestFriendImage_selected);
 
-
+                loadGiftsForCategory("Best Friend");
             }
         });
-        forDadButton.setOnClickListener(new View.OnClickListener() {
+        FamilyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("Star Wish", "Pressed forDadButton!");
-                selectedCategory = "For Dad";
+                Log.v("Star Wish", "Pressed For Family Button!");
+                selectedCategory = "For Family";
                 Log.v("Star Wish", oldCategory);
                 Log.v("Star Wish", selectedCategory);
 
@@ -369,15 +243,16 @@ public class MainScreen extends AppCompatActivity {
                     return;
                 }
                 deselectOldCategory(oldCategory,selectedCategory);
-                dadImageView.setImageResource(forDadImage_selected);
-                loadGiftsForCategory("For Dad");
+                FamilyImageView.setImageResource(FamilyImage_selected);
+
+                loadGiftsForCategory("For Family");
             }
         });
-        electronicsButton.setOnClickListener(new View.OnClickListener() {
+        PartnerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("Star Wish", "Pressed electronicsButton!");
-                selectedCategory = "Electronics";
+                Log.v("Star Wish", "Pressed For Partner Button!");
+                selectedCategory = "For Partner";
 
                 if (oldCategory.equals(selectedCategory)) {
                     // do nothing
@@ -386,14 +261,16 @@ public class MainScreen extends AppCompatActivity {
                     return;
                 }
                 deselectOldCategory(oldCategory,selectedCategory);
-                electronicsImageView.setImageResource(electronicsImage_selected);
+                PartnerImageView.setImageResource(PartnerImage_selected);
+
+                loadGiftsForCategory("For Partner");
             }
         });
-        homeButton.setOnClickListener(new View.OnClickListener() {
+        kidsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("Star Wish", "Pressed homeButton!");
-                selectedCategory = "Home";
+                Log.v("Star Wish", "Pressed For Kids Button!");
+                selectedCategory = "For Kids";
 
                 if (oldCategory.equals(selectedCategory)) {
                     // do nothing
@@ -402,8 +279,9 @@ public class MainScreen extends AppCompatActivity {
                     return;
                 }
                 deselectOldCategory(oldCategory,selectedCategory);
+                kidsImageView.setImageResource(kidsImage_selected);
 
-                homeImageView.setImageResource(homeImage_selected);
+                loadGiftsForCategory("For Kids");
 
             }
         });
@@ -459,5 +337,89 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
+    public ArrayList<ArrayList<String>> TopicWebScrape(String topic) {
+        ArrayList<String> ImgList = new ArrayList<String>();
+        ArrayList<String> UrlList = new ArrayList<String>();
+        ArrayList<String> TitleList = new ArrayList<String>();
+        ArrayList<String> PriceList = new ArrayList<String>();
+        ArrayList<String> DescriptionList = new ArrayList<String>();
+        ArrayList<ArrayList<String>> Results = new ArrayList<ArrayList<String>>();
+        String url = new String();
+
+        if (topic == "Best Selling"){
+            url = "https://www.goodhousekeeping.com/holidays/gift-ideas/g38170847/most-popular-gifts-2021/";
+        } else if (topic == "Best Friend"){
+            url = "https://www.goodhousekeeping.com/holidays/gift-ideas/g4670/best-friend-gifts/";
+        } else if (topic == "For Family"){
+            url = "https://www.goodhousekeeping.com/holidays/gift-ideas/g29263705/best-family-gifts/";
+        } else if (topic == "For Partner"){
+            url = "https://www.goodhousekeeping.com/holidays/gift-ideas/g4517/gifts-for-boyfriend/";
+        } else if (topic == "For Kids"){
+            url = "https://www.goodhousekeeping.com/holidays/gift-ideas/g203/gifts-for-kids/";
+        }
+
+        try {
+            org.jsoup.nodes.Document doc = (org.jsoup.nodes.Document) Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                    .referrer("http://www.google.com")
+                    .get();
+
+            Elements allinfo = (Elements) doc.getElementsByClass("listicle-slide listicle-slide-square listicle-slide-product ");
+
+            for (Element element : allinfo){
+                try {
+                    if (ImgList.size() <= 6) {
+                        String prodNum = element.getElementsByClass("listicle-slide-hed-number").text();
+                        int myNum = Integer.parseInt(prodNum);
+                        int limit = 6;
+                        // Build Image Url List
+                        try {
+                            if (myNum <= limit) {
+                                // Build Image Url List
+                                String img = element.getElementsByTag("source").attr("data-srcset");
+                                ImgList.add(img);
+
+                                // Build Amazon Url List
+                                String urltemp = element.getElementsByClass("product-btn-link").attr("href");
+                                UrlList.add(urltemp);
+
+                                //Build Title List
+                                String Title = element.getElementsByClass("listicle-slide-hed-text").text();
+                                TitleList.add(Title);
+
+                                //Build Price List
+                                String Price = element.getElementsByClass("product-slide-price").text();
+                                if (Price.length() > 10){
+                                    String[] PriceArr = Price.split(" ");
+                                    Price = PriceArr[1];
+                                }
+                                PriceList.add(Price);
+
+                                //Add Product Descriptions
+                                String Description = element.getElementsByClass("slideshow-slide-dek").text();
+                                DescriptionList.add(Description);
+                            }
+                        } catch (Exception e) { }
+                    } else {
+                        break;
+                    }
+                } catch (Exception e) {}
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (HttpStatusException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Results.add(ImgList);
+        Results.add(UrlList);
+        Results.add(TitleList);
+        Results.add(PriceList);
+        Results.add(DescriptionList);
+        return Results;
+    }
 }
+
 
