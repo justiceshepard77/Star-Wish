@@ -7,13 +7,13 @@ public class Gift {
     String cost;
     String url;
     String imageUrl;
-    int image;
+    String description;
 
-    Gift(String title, String cost, String url, String imageUrl,int image) {
+    Gift(String title, String cost, String url, String imageUrl,String description) {
         this.title = title;
         this.cost = cost;
         this.url = url;
         this.imageUrl = imageUrl;
-        this.image = image;
+        this.description = description;
     }
 }

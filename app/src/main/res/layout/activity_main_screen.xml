@@ -170,8 +170,8 @@
         android:id="@+id/giftGridView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:numColumns="2"
+        android:layout_marginTop="32dp"
+        android:numColumns="1"
         app:layout_constraintTop_toBottomOf="@id/giftCategoriesScrollView" />
 
     <TextView
@@ -245,7 +245,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/forMomButton"
+                    android:id="@+id/forBestFriendButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -253,28 +253,28 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/momImageView"
+                        android:id="@+id/BestFriendImageView"
                         android:layout_width="60dp"
                         android:layout_height="55dp"
                         android:layout_gravity="center"
                         android:src="@drawable/mom" />
 
                     <Button
-                        android:id="@+id/mom_button"
+                        android:id="@+id/BestFriend_button"
                         android:layout_width="110dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="0dp"
                         android:layout_marginRight="0dp"
                         android:background="@android:color/transparent"
                         android:paddingBottom="0dp"
-                        android:text="For Mom"
+                        android:text="Best Friend"
                         android:textColor="#000000"
                         android:textSize="10sp"
                         android:textStyle="normal" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/forDadButton"
+                    android:id="@+id/forFamilyButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -282,28 +282,28 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/dadImageView"
+                        android:id="@+id/FamilyImageView"
                         android:layout_width="60dp"
                         android:layout_height="55dp"
                         android:layout_gravity="center"
                         android:src="@drawable/dad" />
 
                     <Button
-                        android:id="@+id/dad_button"
+                        android:id="@+id/Family_button"
                         android:layout_width="110dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="0dp"
                         android:layout_marginRight="0dp"
                         android:background="@android:color/transparent"
                         android:paddingBottom="0dp"
-                        android:text="For dad"
+                        android:text="For Family"
                         android:textColor="#000000"
                         android:textSize="10sp"
                         android:textStyle="normal" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/electronicsButton"
+                    android:id="@+id/PartnerButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -311,28 +311,28 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/electronicsImageView"
+                        android:id="@+id/PartnerImageView"
                         android:layout_width="60dp"
                         android:layout_height="55dp"
                         android:layout_gravity="center"
                         android:src="@drawable/electronics" />
 
                     <Button
-                        android:id="@+id/electronics_button"
+                        android:id="@+id/Partner_button"
                         android:layout_width="110dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="0dp"
                         android:layout_marginRight="0dp"
                         android:background="@android:color/transparent"
                         android:paddingBottom="0dp"
-                        android:text="Electronics"
+                        android:text="For Partner"
                         android:textColor="#000000"
                         android:textSize="10sp"
                         android:textStyle="normal" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/homeButton"
+                    android:id="@+id/kidsButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -340,21 +340,21 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/homeImageView"
+                        android:id="@+id/kidsImageView"
                         android:layout_width="59dp"
                         android:layout_height="51dp"
                         android:layout_gravity="center"
                         android:src="@drawable/home" />
 
                     <Button
-                        android:id="@+id/home_button"
+                        android:id="@+id/kids_button"
                         android:layout_width="110dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="0dp"
                         android:layout_marginRight="0dp"
                         android:background="@android:color/transparent"
                         android:paddingBottom="0dp"
-                        android:text="Home"
+                        android:text="For Kids"
                         android:textColor="#000000"
                         android:textSize="10sp"
                         android:textStyle="normal" />

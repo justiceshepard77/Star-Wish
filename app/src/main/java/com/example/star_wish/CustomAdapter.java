@@ -41,9 +41,14 @@ public class CustomAdapter extends BaseAdapter {
         view = inflter.inflate(R.layout.gift_grid_item, null); // inflate the layout
         ImageView giftImage = (ImageView) view.findViewById(R.id.giftImage); // get the reference of ImageView
         TextView textView = view.findViewById(R.id.giftTitle);
+        TextView PriceView = view.findViewById(R.id.Price);
+        TextView Description = view.findViewById(R.id.Description);
 
 
         textView.setText(gifts.get(i).title);
+        PriceView.setText(gifts.get(i).cost);
+        Description.setText(gifts.get(i).description);
+
         new CustomAdapter.DownloadedImageFromUrl((ImageView) giftImage).execute(gifts.get(i).imageUrl);
 
         return view;
