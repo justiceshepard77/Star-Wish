@@ -50,16 +50,16 @@ public class MainScreen extends AppCompatActivity {
     private ImageView kidsImageView;
 
     int bestSellingImage = R.drawable.bestselling;
-    int BestFriendImage = R.drawable.mom;
+    int BestFriendImage = R.drawable.him;
     int FamilyImage = R.drawable.dad;
-    int PartnerImage = R.drawable.electronics;
-    int kidsImage = R.drawable.home;
+    int PartnerImage = R.drawable.her;
+    int kidsImage = R.drawable.kids;
 
     int bestSellingImage_selected = R.drawable.bestselling_selected;
-    int BestFriendImage_selected = R.drawable.mom_selected;
+    int BestFriendImage_selected = R.drawable.him_selected;
     int FamilyImage_selected = R.drawable.dad_selected;
-    int PartnerImage_selected = R.drawable.electronics_selected;
-    int kidsImage_selected = R.drawable.home_selected;
+    int PartnerImage_selected = R.drawable.her_selected;
+    int kidsImage_selected = R.drawable.kids_selected;
 
     int CategoryIdx;
 

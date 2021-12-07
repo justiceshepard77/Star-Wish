@@ -8,11 +8,11 @@
 
     <EditText
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="Full Name"
         android:inputType="textPersonName"
@@ -23,11 +23,11 @@
 
     <EditText
         android:id="@+id/birthday"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="Birthday"
         android:inputType="date"
@@ -38,11 +38,11 @@
 
     <EditText
         android:id="@+id/emailText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -53,11 +53,11 @@
 
     <EditText
         android:id="@+id/passwordText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -68,11 +68,11 @@
 
     <EditText
         android:id="@+id/confirmPassword"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="Confirm password"
         android:inputType="textPassword"
@@ -83,9 +83,12 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
+        android:backgroundTint="#FF0000"
         android:onClick="register_user"
         android:text="Create Account"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,6 +102,7 @@
         android:layout_marginTop="15dp"
         android:text="Register"
         android:textSize="25sp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
