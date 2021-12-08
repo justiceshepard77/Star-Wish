@@ -23,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.star_wish.databinding.ActivityMainScreenBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -32,6 +34,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainScreen extends AppCompatActivity {
 
@@ -95,11 +98,30 @@ public class MainScreen extends AppCompatActivity {
         simpleGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainScreen.this,"You clicked on " + gifts.get(i).title,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainScreen.this,"You clicked on " + gifts.get(i).title,Toast.LENGTH_SHORT).show();
+                // get uid of user
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = user.getUid();
+
+                // generate random identifier
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                String key = database.getReference().child("interests").child("user").child(uid).push().getKey();
+
+                // create data hashmap to be stored
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("title", gifts.get(i).title);
+                map.put("url", gifts.get(i).url);
+                map.put("cost", gifts.get(i).cost);
+
+                // place data in database
+                FirebaseDatabase.getInstance().getReference().child("interests").child("users").child(uid).child(key).updateChildren(map);
+
+                // open the browser to view gift
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(gifts.get(i).url));
                 startActivity(browserIntent);
             }
         });
+
     }
 
     @Override
@@ -353,6 +375,64 @@ public class MainScreen extends AppCompatActivity {
 
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
+        }
+    }
+
+    public void justiceWebscraper() {
+        try {
+            String url = "https://www.amazon.com/s?k=video+games&ref=nb_sb_noss_2";
+            org.jsoup.nodes.Document doc = (org.jsoup.nodes.Document) Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                    .referrer("http://www.google.com")
+                    .get();
+            Log.v("Scraper Test", String.valueOf(doc.getAllElements()));
+            Elements allinfo = (Elements) doc.getElementsByClass("listicle-slide listicle-slide-square listicle-slide-product ");
+
+//            for (Element element : allinfo){
+//                try {
+//                    if (ImgList.size() <= 6) {
+//                        String prodNum = element.getElementsByClass("listicle-slide-hed-number").text();
+//                        int myNum = Integer.parseInt(prodNum);
+//                        int limit = 6;
+//                        // Build Image Url List
+//                        try {
+//                            if (myNum <= limit) {
+//                                // Build Image Url List
+//                                String img = element.getElementsByTag("source").attr("data-srcset");
+//                                ImgList.add(img);
+//
+//                                // Build Amazon Url List
+//                                String urltemp = element.getElementsByClass("product-btn-link").attr("href");
+//                                UrlList.add(urltemp);
+//
+//                                //Build Title List
+//                                String Title = element.getElementsByClass("listicle-slide-hed-text").text();
+//                                TitleList.add(Title);
+//
+//                                //Build Price List
+//                                String Price = element.getElementsByClass("product-slide-price").text();
+//                                if (Price.length() > 10){
+//                                    String[] PriceArr = Price.split(" ");
+//                                    Price = PriceArr[1];
+//                                }
+//                                PriceList.add(Price);
+//
+//                                //Add Product Descriptions
+//                                String Description = element.getElementsByClass("slideshow-slide-dek").text();
+//                                DescriptionList.add(Description);
+//                            }
+//                        } catch (Exception e) { }
+//                    } else {
+//                        break;
+//                    }
+//                } catch (Exception e) {}
+//            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (HttpStatusException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

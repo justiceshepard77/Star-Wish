@@ -91,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = user.getUid();
 
-                    addUserInfoToDB(uid, name,email,bday);
+                    addUserInfoToDB(uid,name,bday,email);
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -107,8 +107,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", name);
-        map.put("email", email);
         map.put("bday", bday);
+        map.put("email", email);
 
         FirebaseDatabase.getInstance().getReference().child("users").child(uid).updateChildren(map);
 
